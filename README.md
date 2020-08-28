@@ -7,6 +7,7 @@ Responsive lyric and chord wrapper.
 
 ```html
 <div id="song">Learning How to Die
+Jon Foreman
 Key : D
   
 CHORUS
