@@ -1,6 +1,9 @@
 # chordy.js
 Responsive lyric and chord wrapper.
 
+# Demo
+https://pacolemon.blogspot.com/2018/02/its-not-like-i-like-you-amree-and.html
+
 # Basic Usage
 - Wrap lyric and chord inside a container.
 - Call `chordy.init()`.
