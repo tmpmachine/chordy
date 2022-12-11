@@ -281,7 +281,7 @@
       key: ["C","C#","D","Eb","E","F","F#","G","G#","A","Bb","B"],
       keyGate: function(i) { return (i > 11) ? (i - 12) % 12 : i; },
       transpose: function(finalKey, wrapper) {
-        chordy._chordBase = [];
+        wrapper.data.LC._chordBase = [];
         var activeKey = wrapper.data.transposer._baseKey;
         var transPoint =  (activeKey > finalKey) ? 12-activeKey+finalKey*1 : finalKey-activeKey;
         var o1 = [], o2 = [], pc = [];
@@ -329,7 +329,7 @@
           let chordAtom = $('.chordy-chords-'+wrapper.data.unique)[i].textContent.split(' ');
           for (let j = 0; j < chordAtom.length; j++) {
             if (chordAtom[j].length == 0 || chordAtom[j].match(/[.|\||\|\|]/) !== null) continue;
-            if (chordy._chordBase.indexOf(chordAtom[j]) < 0) chordy._chordBase.push(chordAtom[j]);
+            if (wrapper.data.LC._chordBase.indexOf(chordAtom[j]) < 0) wrapper.data.LC._chordBase.push(chordAtom[j]);
           }
         }
         
