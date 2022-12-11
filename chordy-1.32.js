@@ -1,5 +1,4 @@
-/* v1.32 - 28 aug 2020 by TmP of PacoLemon */
-(function () {
+;(function () {
   
   let $ = function(selector, node=document) { let nodes = node.querySelectorAll(selector); return (nodes.length === 1 && selector.indexOf('#') === 0) ? nodes[0] : nodes };
   
@@ -192,7 +191,8 @@
       return dat;
     },
     getPlayerProfile: function(wrapper) {
-      let vw = Math.max(225, wrapper.offsetWidth);
+      // let vw = Math.max(225, wrapper.offsetWidth);
+      let vw = Math.max(225, $('#chordy-container-width').offsetWidth);
       let cw = $('#chordy-char').offsetWidth / 10;
       let vh = wrapper.offsetHeight;
       let ch = $('#chordy-char').offsetHeight;
@@ -218,7 +218,7 @@
           } else if (noKey && line.indexOf('Key :') === 0) {
             type = 3; 
             noKey = false;
-          } else if (line.match(/[R~hp,SrtkewnKOl"oygf!PI]| d/g) === null) {
+          } else if (line.match(/[TR~hp,SrtkewnKOl"oygf!PI]| d/g) === null) {
             let chords = line.split(' ');
             for (let chord of chords) {
               if (chord.length == 0 || chord.match(/[.|\||\|\|]/) !== null) continue;
@@ -275,7 +275,7 @@
         
       if (wrapper.data.player.mode == 2) chordy.transposer.disable();
       else chordy.transposer.enable();
-      chordy.rebound();
+      chordy.resizeWrapper();
     },
     transposer: {
       key: ["C","C#","D","Eb","E","F","F#","G","G#","A","Bb","B"],
@@ -364,7 +364,7 @@
       const data = chordy.getResponsiveString(JSON.parse(JSON.stringify(wrapper.data.LC.song)), profile);
       wrapper.innerHTML = chordy.fillPages(data, profile, wrapper).join('\n');
     },
-    rebound: function() {
+    resizeWrapper: function() {
       const wrappers = $('.chordy-container');
       
       for (let wrapper of wrappers) {
@@ -393,9 +393,7 @@
       
       if (chordy.once) {
         chordy.supportElement();
-        window.addEventListener('resize', function chordyRebound() {
-          chordy.rebound();
-        });
+        window.addEventListener('resize', chordy.resizeWrapper);
         chordy.once = false;
       }
       
@@ -436,10 +434,10 @@
       style.setAttribute('id', 'chordy-style');
       style.innerHTML = `
         .chordy-container {white-space:pre;line-height:1.4em;}
-        .chordy-container.mode1 {font-family:Cousine, monospace;font-size:13px;}
-        .chordy-container.mode2 {font-family:Telex, sans-serif;font-size:15px;}
-        #chordy-char.mode1 {min-width:7px;float:left;font-family:Cousine, monospace;font-size:13px;}
-        #chordy-char.mode2 {min-width:7px;float:left;font-family:Telex, sans-serif;font-size:15px;}`;
+        .chordy-container.mode1 {font-family:monospace;font-size:13px;}
+        .chordy-container.mode2 {font-family:sans-serif;font-size:15px;}
+        #chordy-char.mode1 {min-width:7px;float:left;font-family:monospace;font-size:13px;}
+        #chordy-char.mode2 {min-width:7px;float:left;font-family:sans-serif;font-size:15px;}`;
       document.head.appendChild(style);
       
       let div = document.createElement('div');
@@ -453,6 +451,19 @@
   
       div.appendChild(p);
       document.body.appendChild(div);
+    },
+    updateTransposer: function(wrapperEl) {
+      let chords = wrapperEl.data.LC.GC;
+      if (chords.includes('Db') && !chords.includes('C#'))
+        this.transposer.key[1] = 'Db';
+      if (chords.includes('D#') && !chords.includes('Eb'))
+        this.transposer.key[3] = 'D#';
+      if (chords.includes('Gb') && !chords.includes('F#'))
+        this.transposer.key[6] = 'Gb';
+      if (chords.includes('Ab') && !chords.includes('G#'))
+        this.transposer.key[8] = 'Ab';
+      if (chords.includes('A#') && !chords.includes('Bb'))
+        this.transposer.key[10] = 'A#';
     }
   };  
   
@@ -461,4 +472,5 @@
   } else {
     console.error('chordy.js:', 'Failed to initialize. Duplicate variable exists.');
   }
+  
 })();
