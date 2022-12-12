@@ -62,7 +62,11 @@
         i++;
       }
       
-      if (lyric[i][0] != 4) clean.push(lyric[i]);
+      if (lyric[i][0] != 4) {
+        lyric[i][1] = lyric[i][1].replace(/  +/g,' ').replace(/^ /g,'');
+        clean.push(lyric[i]);
+      }
+      
       for (i=0; i < clean.length; i++) {
         
         if (clean[i][0] == 4) {clean.splice(i,0,[0,'']); i++}
