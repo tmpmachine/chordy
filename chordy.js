@@ -62,11 +62,7 @@
         i++;
       }
       
-      if (lyric[i][0] != 4) {
-        lyric[i][1] = lyric[i][1].replace(/  +/g,' ').replace(/^ /g,'');
-        clean.push(lyric[i]);
-      }
-      
+      if (lyric[i][0] != 4) clean.push(lyric[i]);
       for (i=0; i < clean.length; i++) {
         
         if (clean[i][0] == 4) {clean.splice(i,0,[0,'']); i++}
@@ -203,7 +199,7 @@
       
       wrapper.setAttribute('chordy-width', wrapper.offsetWidth);
       
-      return {char:Math.floor(vw/cw),line:Math.floor(vh/ch)}
+      return {char:Math.floor(vw/cw),line:Math.floor(vh/ch)};
     },
     classify: function(song) {
       let lines = song.trim().split('\n');
@@ -264,7 +260,7 @@
         charLen: charLen,
         GC: GC,
         chords: [],
-      }
+      };
     },
     toggleLyric: function(wrapper, persistent) {
       if (persistent !== undefined) {
@@ -283,18 +279,68 @@
     },
     transposer: {
       key: ["C","C#","D","Eb","E","F","F#","G","G#","A","Bb","B"],
-      keyGate: function(i) { return (i > 11) ? (i - 12) % 12 : i; },
+      generateIntervalHomeKey: function(keyIndex) {
+        let key = chordy.transposer.key[keyIndex];
+        let keySet = [["B#","C"],["C#", "Db"],["C##","D"],["D#","Eb"],["D##","E"],["E#","F"],["F#","Gb"],["F##","G"],["G#","Ab"],["G##","A"],["A#","Bb"],["B","Cb"]];
+        let foundIndex = -1;
+        let offset = -1;
+        for (let i=0; i<keySet.length; i++) {
+          if (keySet[i][0] == key) {
+            foundIndex = i;
+            offset = 0;
+            break;
+          } else if (keySet[i][1] == key) {
+            foundIndex = i;
+            offset = 1;
+            break;
+          }
+        }
+        
+        let si = foundIndex;
+        let homeSet = [keySet[si][offset]];
+        
+        let checkIndex = 0;
+        let alfa = 'ABCDEFGABCDEFGABCDEFG'.split('');
+        let currentAlfaIndex = alfa.indexOf(key.charAt(0))+1;
+        
+        while (homeSet.length < 12) {
+          
+          if ([1,3,4,6,8,10].includes(checkIndex)) {
+            if (keySet[(si+1)%12][0].charAt(0) == alfa[currentAlfaIndex]) {
+              homeSet.push(keySet[(si+1)%12][0]);
+            } else {
+              homeSet.push(keySet[(si+1)%12][1]);
+            }
+            currentAlfaIndex++;
+          } else if ([5].includes(checkIndex)) {
+            if (keySet[(si+1)%12][0].charAt(0) == alfa[currentAlfaIndex-1]) {
+              homeSet.push(keySet[(si+1)%12][0]);
+            } else {
+              homeSet.push(keySet[(si+1)%12][1]);
+            }
+          } else {
+            homeSet.push(keySet[(si+1)%12][offset]);
+          }
+          
+          si++;
+          checkIndex++;
+        }
+
+        return homeSet;
+      },
       transpose: function(finalKey, wrapper) {
         wrapper.data.LC._chordBase = [];
         var activeKey = wrapper.data.transposer._baseKey;
         var transPoint =  (activeKey > finalKey) ? 12-activeKey+finalKey*1 : finalKey-activeKey;
-        var o1 = [], o2 = [], pc = [];
-        for (var i = 0; i < 12; i++) {
-          o1.push(chordy.transposer.key[chordy.transposer.keyGate(activeKey+i)]);
-          o2.push(chordy.transposer.key[chordy.transposer.keyGate(activeKey+i+transPoint)]);
-          pc.push(o1[i].length - o2[i].length);
+        var pc = [];
+        
+        let homeKey = chordy.transposer.generateIntervalHomeKey(activeKey);
+        let targetHomeKey = chordy.transposer.generateIntervalHomeKey(finalKey);
+        
+        for (let i = 0; i < 12; i++) {
+          pc.push(homeKey[i].length - targetHomeKey[i].length);
         }
-      
+        
         var chord = wrapper.data.LC.chords;
   
         for (i = 0; i < chord.length; i++) {
@@ -311,9 +357,9 @@
               char[j] += char[j+1];
             }
               
-            var batIdx = o1.indexOf(char[j]);
+            var batIdx = homeKey.indexOf(char[j]);
             if (batIdx >= 0) {
-              char[j] = o2[batIdx];
+              char[j] = targetHomeKey[batIdx];
               if (pc[batIdx] === 1 || pc[batIdx] === -1) {
                 for (var j2 = j + 1; j2 < char.length; j2++) {
                   if (char[j2] === ' ') {
