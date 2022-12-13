@@ -314,7 +314,7 @@
             if (![9].includes(checkIndex)) {
               currentAlfaIndex++;
             }
-          } else if ([0,5].includes(checkIndex)) {
+          } else if ([0,5,7].includes(checkIndex)) {
             if (keySet[(si+1)%12][0].charAt(0) == alfa[currentAlfaIndex-1]) {
               homeSet.push(keySet[(si+1)%12][0]);
             } else {
