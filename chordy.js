@@ -336,7 +336,7 @@
         let homeKey = chordy.transposer.generateIntervalHomeKey(activeKey);
         let targetHomeKey = chordy.transposer.generateIntervalHomeKey(finalKey);
         
-        for (let i = 0; i < 12; i++) {
+        for (let i=0; i<homeKey.length; i++) {
           pc.push(homeKey[i].length - targetHomeKey[i].length);
         }
         
