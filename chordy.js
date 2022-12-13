@@ -303,7 +303,7 @@
         let alfa = 'ABCDEFGABCDEFGABCDEFG'.split('');
         let currentAlfaIndex = alfa.indexOf(key.charAt(0))+1;
         
-        while (homeSet.length < 12) {
+        while (homeSet.length < 16) {
           
           if ([1,3,4,6,8,9,10].includes(checkIndex)) {
             if (keySet[(si+1)%12][0].charAt(0) == alfa[currentAlfaIndex]) {
@@ -314,12 +314,9 @@
             if (![9].includes(checkIndex)) {
               currentAlfaIndex++;
             }
-          } else if ([0,5,7].includes(checkIndex)) {
-            if (keySet[(si+1)%12][0].charAt(0) == alfa[currentAlfaIndex-1]) {
-              homeSet.push(keySet[(si+1)%12][0]);
-            } else {
-              homeSet.push(keySet[(si+1)%12][1]);
-            }
+          } else if ([0,2,5,7].includes(checkIndex)) {
+            homeSet.push(keySet[(si+1)%12][0]);
+            homeSet.push(keySet[(si+1)%12][1]);
           } else {
             homeSet.push(keySet[(si+1)%12][offset]);
           }
