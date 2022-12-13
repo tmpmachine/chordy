@@ -305,14 +305,16 @@
         
         while (homeSet.length < 12) {
           
-          if ([1,3,4,6,8,10].includes(checkIndex)) {
+          if ([1,3,4,6,8,9,10].includes(checkIndex)) {
             if (keySet[(si+1)%12][0].charAt(0) == alfa[currentAlfaIndex]) {
               homeSet.push(keySet[(si+1)%12][0]);
             } else {
               homeSet.push(keySet[(si+1)%12][1]);
             }
-            currentAlfaIndex++;
-          } else if ([5].includes(checkIndex)) {
+            if (![9].includes(checkIndex)) {
+              currentAlfaIndex++;
+            }
+          } else if ([0,5].includes(checkIndex)) {
             if (keySet[(si+1)%12][0].charAt(0) == alfa[currentAlfaIndex-1]) {
               homeSet.push(keySet[(si+1)%12][0]);
             } else {
