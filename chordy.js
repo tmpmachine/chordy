@@ -373,9 +373,10 @@
             
             if (skip) j++;
           }
-          $('.chordy-chords-'+wrapper.data.unique)[i].textContent = splitNew.join('');
+          let elChord = wrapper.querySelectorAll('.chordy-chords-'+wrapper.data.unique)[i];
+          elChord.textContent = splitNew.join('');
           
-          let chordAtom = $('.chordy-chords-'+wrapper.data.unique)[i].textContent.split(' ');
+          let chordAtom = elChord.textContent.split(' ');
           for (let j = 0; j < chordAtom.length; j++) {
             if (chordAtom[j].length == 0 || chordAtom[j].match(/[.|\||\|\|]/) !== null) continue;
             if (wrapper.data.LC._chordBase.indexOf(chordAtom[j]) < 0) wrapper.data.LC._chordBase.push(chordAtom[j]);
