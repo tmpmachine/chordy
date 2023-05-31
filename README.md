@@ -2,7 +2,7 @@
 Responsive lyric and chord wrapper.
 
 # Demo
-https://pacolemon.blogspot.com/2018/02/its-not-like-i-like-you-amree-and.html
+https://bukupujian2.blogspot.com/2021/10/echo.html
 
 # Basic Usage
 - Wrap lyric and chord inside a container.
